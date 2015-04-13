@@ -103,6 +103,10 @@
     if (_lateralViewWidth == lateralViewWidth)
         return;
     _lateralViewWidth = lateralViewWidth;
+    
+    if (!UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]))
+        return;
+    
     if (animated) {
         [UIView animateWithDuration:1.0 animations:^{
             [self.lateralView mas_updateConstraints:^(MASConstraintMaker *make) {

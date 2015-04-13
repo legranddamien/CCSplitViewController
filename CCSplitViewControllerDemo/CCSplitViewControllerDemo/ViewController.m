@@ -38,8 +38,6 @@
     splitViewController.viewControllers = [NSArray arrayWithObjects:vc1, vc2, nil];    
     splitViewController.offsetContentView = 32;
     
-//    [self presentViewController:splitViewController animated:YES completion:nil];
-    
     [self presentViewController:splitViewController animated:YES completion:^{
 //        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
 //            [NSThread sleepForTimeInterval:2.0];
