@@ -15,7 +15,7 @@
 @property (nonatomic) UIView *lateralView;
 
 @property (nonatomic, strong) MASConstraint *lateralWidth;
-@property (nonatomic, strong) MASConstraint *lateralOffset;
+@property (nonatomic, strong) MASConstraint *contentInsets;
 
 @end
 
@@ -29,7 +29,7 @@
     self = [super init];
     if (self) {
         self.lateralViewWidth = 256;
-        self.offsetContentView = 0;
+        self.insetsContentView = 0;
     }
     return self;
 }
@@ -39,9 +39,7 @@
     
     self.contentView = [UIView new];
     self.lateralView = [UIView new];
-    
-    self.view.backgroundColor = [UIColor redColor];
-    
+        
     [self.view addSubview:self.contentView];
     [self.view addSubview:self.lateralView];
     
@@ -63,7 +61,8 @@
         make.left.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view);
-        make.right.mas_equalTo(self.lateralView.mas_left);
+        self.contentInsets = make.right.mas_equalTo(self.lateralView.mas_left).with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
+        
     }];
     
     [self.lateralView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -96,28 +95,28 @@
 #pragma mark - Custom Accessors
 
 - (void)setLateralViewWidth:(CGFloat)lateralViewWidth {
-    _lateralViewWidth = lateralViewWidth;
+    [self setLateralViewWidth:lateralViewWidth animated:YES];
 }
 
 - (void)setLateralViewWidth:(CGFloat)lateralViewWidth animated:(BOOL)animated {
     if (_lateralViewWidth == lateralViewWidth)
         return;
+
     _lateralViewWidth = lateralViewWidth;
     
     if (!UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]))
         return;
+
+    if (!self.lateralWidth)
+        return;
     
+    self.lateralWidth.equalTo(@(self.lateralViewWidth));
+
     if (animated) {
         [UIView animateWithDuration:1.0 animations:^{
-            [self.lateralView mas_updateConstraints:^(MASConstraintMaker *make) {
-                self.lateralWidth.equalTo(@(self.lateralViewWidth));
-            }];
             [self.view layoutIfNeeded];
         }];
     } else {
-        [self.lateralView mas_updateConstraints:^(MASConstraintMaker *make) {
-            self.lateralWidth.equalTo(@(self.lateralViewWidth));
-        }];
         [self.view layoutIfNeeded];
     }
 }
@@ -125,19 +124,17 @@
 #pragma mark - private
 
 - (void)hideLateralView {
+    self.lateralWidth.mas_equalTo(@(0));
+    self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, 0));
     [UIView animateWithDuration:0.35 animations:^{
-        [self.lateralView mas_updateConstraints:^(MASConstraintMaker *make) {
-            self.lateralWidth.mas_equalTo(@(0));
-        }];
         [self.view layoutIfNeeded];
     }];
 }
 
 - (void)showLateralView {
+    self.lateralWidth.mas_equalTo(@(self.lateralViewWidth));
+    self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
     [UIView animateWithDuration:0.35 animations:^{
-        [self.lateralView mas_updateConstraints:^(MASConstraintMaker *make) {
-            self.lateralWidth.mas_equalTo(@(self.lateralViewWidth));
-        }];
         [self.view layoutIfNeeded];
     }];
 }

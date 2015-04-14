@@ -14,7 +14,8 @@
 
 @property (nonatomic, assign) CGFloat lateralViewWidth;
 
-@property (nonatomic) CGFloat offsetContentView;
+// Specifies the insets between contentView and lateralView
+@property (nonatomic) CGFloat insetsContentView;
 
 - (void)setLateralViewWidth:(CGFloat)lateralViewWidth animated:(BOOL)animated;
 

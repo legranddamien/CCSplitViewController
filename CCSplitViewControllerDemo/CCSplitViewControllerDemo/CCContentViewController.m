@@ -46,8 +46,7 @@
         
         textView.editable = NO;
         textView.text = @"Bonjour, bonjour";
-        textView.backgroundColor = [UIColor grayColor];
-
+        textView.backgroundColor = [UIColor clearColor];
         
         [self.scrollViewContent addSubview:textView];
         [textView mas_makeConstraints:^(MASConstraintMaker *make) {
