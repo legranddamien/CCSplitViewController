@@ -50,77 +50,53 @@
 
 #pragma mark - Swizzled Methods
 
-#pragma message("Faire les verifications avant d'acceder aux viewControllers !!")
-#pragma message("merge les conditions en une seule !")
-
 - (UINavigationController *)cc_navigationController {
-    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]]) {
-        if (((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
-            return [self.parentViewController navigationController];
-        else
-            return [self cc_navigationController];
-    }
-    else {
+    
+    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
+        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        return [self.parentViewController navigationController];
+    else
         return [self cc_navigationController];
-    }
 }
 
 - (UINavigationItem *)cc_navigationItem {
-    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]]) {
-        if (((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
-            return [self.parentViewController navigationItem];
-        else
-            return [self cc_navigationItem];
-    } else {
+    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
+        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        return [self.parentViewController navigationItem];
+    else
         return [self cc_navigationItem];
-    }
 }
 
 - (void)cc_setTitle:(NSString *)title {
-    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]]) {
-        
-        if (((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
-            [self.parentViewController setTitle:title];
-        else
-            [self cc_setTitle:title];
-        
-    } else {
+    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
+        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        [self.parentViewController setTitle:title];
+    else
         [self cc_setTitle:title];
-    }
 }
 
 - (void)cc_setHidesBottomBarWhenPushed:(BOOL)hidesBottomBarWhenPushed {
-    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]]) {
-        
-        if (((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
-            [self.parentViewController setHidesBottomBarWhenPushed:hidesBottomBarWhenPushed];
-        else
-            [self cc_setHidesBottomBarWhenPushed:hidesBottomBarWhenPushed];
-    } else {
+    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
+        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        [self.parentViewController setHidesBottomBarWhenPushed:hidesBottomBarWhenPushed];
+    else
         [self cc_setHidesBottomBarWhenPushed:hidesBottomBarWhenPushed];
-    }
 }
 
 - (void)cc_setToolbarItems:(NSArray *)toolbarItems {
-    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]]) {
-        if (((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
-            [self.parentViewController setToolbarItems:toolbarItems];
-        else
-            [self cc_setToolbarItems:toolbarItems];
-    } else {
+    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
+        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        [self.parentViewController setToolbarItems:toolbarItems];
+    else
         [self cc_setToolbarItems:toolbarItems];
-    }
 }
 
 - (void)cc_setToolbarItems:(NSArray *)toolbarItems animated:(BOOL)animated {
-    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]]) {
-        if (((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
-            [self.parentViewController setToolbarItems:toolbarItems animated:animated];
-        else
-            [self cc_setToolbarItems:toolbarItems animated:animated];
-    } else {
+    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
+        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        [self.parentViewController setToolbarItems:toolbarItems animated:animated];
+    else
         [self cc_setToolbarItems:toolbarItems animated:animated];
-    }
 }
 
 @end
