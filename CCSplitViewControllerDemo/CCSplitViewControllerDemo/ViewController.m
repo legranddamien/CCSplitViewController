@@ -27,6 +27,8 @@
 
 - (IBAction)launchExample:(id)sender {
     
+    UINavigationController *navigationController = [UINavigationController new];
+    
     CCSplitViewController *splitViewController = [CCSplitViewController new];
     
     CCContentViewController *vc1 = [CCContentViewController new];
@@ -35,11 +37,20 @@
     CCContentViewController *vc2 = [CCContentViewController new];
     vc2.view.backgroundColor = [UIColor colorWithRed:0.18 green:0.8 blue:0.44 alpha:1.0];
 
-    splitViewController.viewControllers = [NSArray arrayWithObjects:vc1, vc2, nil];    
-    splitViewController.insetsContentView = 32;
+    splitViewController.viewControllers = [NSArray arrayWithObjects:vc1, vc2, nil];
     
-    [self presentViewController:splitViewController animated:YES completion:nil];
+    [navigationController pushViewController:splitViewController animated:NO];
     
+    
+    [self presentViewController:navigationController animated:YES completion:^{
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+            [NSThread sleepForTimeInterval:2.0];
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                vc1.navigationItem.title = @"vc1";
+                vc2.navigationItem.title = @"vc2";
+            });
+        });
+    }];
 }
 
 

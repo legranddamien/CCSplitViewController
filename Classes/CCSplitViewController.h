@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@interface UIViewController (CCSplitViewController)
+
+@end
+
 @interface CCSplitViewController : UIViewController
 
 @property (nonatomic, copy) NSArray *viewControllers;
