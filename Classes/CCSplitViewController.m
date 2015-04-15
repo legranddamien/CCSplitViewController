@@ -168,22 +168,17 @@
     }];
     
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-    if (UIDeviceOrientationIsLandscape(orientation)) {
-        [self showLateralView];
-    } else {
-        [self hideLateralView];
-    }
+    if (!UIDeviceOrientationIsLandscape(orientation))
+        [self hideLateralViewAnimated:NO];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     if (UIDeviceOrientationIsLandscape(orientation)) {
-        [self showLateralView];
+        [self showLateralViewAnimated:YES];
     } else {
-        [self hideLateralView];
+        [self hideLateralViewAnimated:YES];
     }
-    
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -192,7 +187,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Custom Accessors
@@ -226,20 +220,26 @@
 
 #pragma mark - private
 
-- (void)hideLateralView {
+- (void)hideLateralViewAnimated:(BOOL)animated {
     self.lateralWidth.mas_equalTo(@(0));
     self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, 0));
-    [UIView animateWithDuration:0.35 animations:^{
+    if (animated)
+        [UIView animateWithDuration:0.35 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    else
         [self.view layoutIfNeeded];
-    }];
 }
 
-- (void)showLateralView {
+- (void)showLateralViewAnimated:(BOOL)animated {
     self.lateralWidth.mas_equalTo(@(self.lateralViewWidth));
     self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
-    [UIView animateWithDuration:0.35 animations:^{
+    if (animated)
+        [UIView animateWithDuration:0.35 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    else
         [self.view layoutIfNeeded];
-    }];
 }
 
 @end
