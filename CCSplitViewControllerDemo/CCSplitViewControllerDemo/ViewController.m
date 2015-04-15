@@ -39,10 +39,10 @@
 
     splitViewController.viewControllers = [NSArray arrayWithObjects:vc1, vc2, nil];
     
-    [navigationController pushViewController:splitViewController animated:NO];
+//    [navigationController pushViewController:splitViewController animated:NO];
     
     
-    [self presentViewController:navigationController animated:YES completion:^{
+    [self presentViewController:splitViewController animated:YES completion:^{
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             [NSThread sleepForTimeInterval:2.0];
             dispatch_async(dispatch_get_main_queue(), ^(void){

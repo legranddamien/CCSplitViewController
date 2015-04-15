@@ -190,12 +190,6 @@
         make.top.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view);
     }];
-}
-
-#pragma message("Rotation in navigation controller")
-
-- (BOOL)shouldAutorotate {
-    
     
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     if (UIDeviceOrientationIsLandscape(orientation)) {
@@ -203,7 +197,17 @@
     } else {
         [self hideLateralView];
     }
-    return YES;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    if (UIDeviceOrientationIsLandscape(orientation)) {
+        [self showLateralView];
+    } else {
+        [self hideLateralView];
+    }
+    
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
