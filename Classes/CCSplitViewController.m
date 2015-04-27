@@ -62,9 +62,13 @@
 - (UINavigationItem *)cc_navigationItem {
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
         ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+    {
         return [self.parentViewController navigationItem];
+    }
     else
+    {
         return [self cc_navigationItem];
+    }
 }
 
 - (void)cc_setTitle:(NSString *)title {
@@ -127,6 +131,15 @@
     return self;
 }
 
+- (void)setViewControllers:(NSArray *)viewControllers
+{
+    _viewControllers = viewControllers;
+    for (UIViewController *vc in _viewControllers)
+    {
+        [self addChildViewController:vc];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -138,7 +151,7 @@
     
     if ([self.viewControllers count] > 0) {
         [self.contentView addSubview:[self.viewControllers[0] view]];
-        [self addChildViewController:self.viewControllers[0]];
+        //[self addChildViewController:self.viewControllers[0]];
         [self.contentView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.contentView);
         }];
@@ -146,7 +159,7 @@
     
     if ([self.viewControllers count] > 1) {
         [self.lateralView addSubview:[self.viewControllers[1] view]];
-        [self addChildViewController:self.viewControllers[1]];
+       // [self addChildViewController:self.viewControllers[1]];
         [self.lateralView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.lateralView);
         }];
