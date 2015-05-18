@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "CCContentViewController.h"
+#import "CCDetailsViewController.h"
 #import "CCSplitViewController.h"
 
 @interface ViewController ()
@@ -41,13 +42,13 @@
     
     [navigationController pushViewController:splitViewController animated:NO];
     
+    vc1.navigationItem.title = @"vc1";
+    vc2.navigationItem.title = @"vc2";
     
     [self presentViewController:navigationController animated:YES completion:^{
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             [NSThread sleepForTimeInterval:2.0];
             dispatch_async(dispatch_get_main_queue(), ^(void){
-                vc1.navigationItem.title = @"vc1";
-                vc2.navigationItem.title = @"vc2";
             });
         });
     }];

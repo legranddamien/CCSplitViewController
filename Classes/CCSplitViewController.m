@@ -25,7 +25,6 @@
         [self convertSelector:@selector(setToolbarItems:animated:) toSelector:@selector(cc_setToolbarItems:animated:) forClass:class];
         
     });
-    
 }
 
 + (void)convertSelector:(SEL)originalSelector toSelector:(SEL)swizzledSelector forClass:(Class)class {
@@ -52,52 +51,129 @@
 
 - (UINavigationController *)cc_navigationController {
     
+    UIViewController *tmpViewController;
+    CCSplitViewController *tmpSplitViewController = nil;
+
+    if ([self.parentViewController isKindOfClass:[CCSplitViewController class]])
+        tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
+
+    if (tmpSplitViewController) {
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+            tmpViewController = tmpSplitViewController.viewControllers[1];
+        else
+            tmpViewController = tmpSplitViewController.viewControllers[0];
+    }
+    
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
-        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        tmpViewController == self)
         return [self.parentViewController navigationController];
     else
         return [self cc_navigationController];
 }
 
 - (UINavigationItem *)cc_navigationItem {
+    UIViewController *tmpViewController;
+    CCSplitViewController *tmpSplitViewController = nil;
+    
+    if ([self.parentViewController isKindOfClass:[CCSplitViewController class]])
+        tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
+    
+    if (tmpSplitViewController) {
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+            tmpViewController = tmpSplitViewController.viewControllers[1];
+        else
+            tmpViewController = tmpSplitViewController.viewControllers[0];
+    }
+
+    
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
-        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
-    {
+        tmpViewController == self)
         return [self.parentViewController navigationItem];
-    }
     else
-    {
         return [self cc_navigationItem];
-    }
 }
 
 - (void)cc_setTitle:(NSString *)title {
+    
+    UIViewController *tmpViewController;
+    CCSplitViewController *tmpSplitViewController = nil;
+    
+    if ([self.parentViewController isKindOfClass:[CCSplitViewController class]])
+        tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
+    
+    if (tmpSplitViewController) {
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+            tmpViewController = tmpSplitViewController.viewControllers[1];
+        else
+            tmpViewController = tmpSplitViewController.viewControllers[0];
+    }
+
+    
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
-        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        tmpViewController == self)
         [self.parentViewController setTitle:title];
     else
         [self cc_setTitle:title];
 }
 
 - (void)cc_setHidesBottomBarWhenPushed:(BOOL)hidesBottomBarWhenPushed {
+    UIViewController *tmpViewController;
+    CCSplitViewController *tmpSplitViewController = nil;
+    
+    if ([self.parentViewController isKindOfClass:[CCSplitViewController class]])
+        tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
+    
+    if (tmpSplitViewController) {
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+            tmpViewController = tmpSplitViewController.viewControllers[1];
+        else
+            tmpViewController = tmpSplitViewController.viewControllers[0];
+    }
+
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
-        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        tmpViewController == self)
         [self.parentViewController setHidesBottomBarWhenPushed:hidesBottomBarWhenPushed];
     else
         [self cc_setHidesBottomBarWhenPushed:hidesBottomBarWhenPushed];
 }
 
 - (void)cc_setToolbarItems:(NSArray *)toolbarItems {
+    UIViewController *tmpViewController;
+    CCSplitViewController *tmpSplitViewController = nil;
+    
+    if ([self.parentViewController isKindOfClass:[CCSplitViewController class]])
+        tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
+    
+    if (tmpSplitViewController) {
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+            tmpViewController = tmpSplitViewController.viewControllers[1];
+        else
+            tmpViewController = tmpSplitViewController.viewControllers[0];
+    }
+
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
-        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        tmpViewController == self)
         [self.parentViewController setToolbarItems:toolbarItems];
     else
         [self cc_setToolbarItems:toolbarItems];
 }
 
 - (void)cc_setToolbarItems:(NSArray *)toolbarItems animated:(BOOL)animated {
+    UIViewController *tmpViewController;
+    CCSplitViewController *tmpSplitViewController = nil;
+    
+    if ([self.parentViewController isKindOfClass:[CCSplitViewController class]])
+        tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
+    
+    if (tmpSplitViewController) {
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+            tmpViewController = tmpSplitViewController.viewControllers[1];
+        else
+            tmpViewController = tmpSplitViewController.viewControllers[0];
+    }
+
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
-        ((CCSplitViewController *)self.parentViewController).viewControllers[0] == self)
+        tmpViewController == self)
         [self.parentViewController setToolbarItems:toolbarItems animated:animated];
     else
         [self cc_setToolbarItems:toolbarItems animated:animated];
@@ -108,8 +184,8 @@
 
 @interface CCSplitViewController ()
 
-@property (nonatomic) UIView *contentView;
-@property (nonatomic) UIView *lateralView;
+@property (nonatomic) UIView *firstView;
+@property (nonatomic) UIView *secondView;
 
 @property (nonatomic, strong) MASConstraint *lateralWidth;
 @property (nonatomic, strong) MASConstraint *contentInsets;
@@ -143,42 +219,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.contentView = [UIView new];
-    self.lateralView = [UIView new];
+    self.firstView = [UIView new];
+    self.secondView = [UIView new];
     
-    [self.view addSubview:self.contentView];
-    [self.view addSubview:self.lateralView];
+    [self.view addSubview:self.firstView];
+    [self.view addSubview:self.secondView];
     
     if ([self.viewControllers count] > 0) {
-        [self.contentView addSubview:[self.viewControllers[0] view]];
-        //[self addChildViewController:self.viewControllers[0]];
-        [self.contentView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.contentView);
+        [self.firstView addSubview:[self.viewControllers[0] view]];
+        [self.firstView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.firstView);
         }];
     }
     
     if ([self.viewControllers count] > 1) {
-        [self.lateralView addSubview:[self.viewControllers[1] view]];
-       // [self addChildViewController:self.viewControllers[1]];
-        [self.lateralView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.lateralView);
+        [self.secondView addSubview:[self.viewControllers[1] view]];
+        [self.secondView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.secondView);
         }];
     }
     
-    [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view);
-        self.contentInsets = make.right.mas_equalTo(self.lateralView.mas_left).with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
-        
-    }];
-    
-    [self.lateralView mas_makeConstraints:^(MASConstraintMaker *make) {
-        self.lateralWidth = make.width.equalTo(@(self.lateralViewWidth));
-        make.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view);
-    }];
+    [self createView];
     
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     if (!UIDeviceOrientationIsLandscape(orientation))
@@ -232,6 +293,44 @@
 }
 
 #pragma mark - private
+
+- (void)createView {
+    if ([self.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+    {
+        [self.firstView mas_makeConstraints:^(MASConstraintMaker *make) {
+            self.lateralWidth = make.width.equalTo(@(self.lateralViewWidth));
+            make.left.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view);
+            make.bottom.mas_equalTo(self.view);
+        }];
+        
+        [self.secondView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view);
+            make.bottom.mas_equalTo(self.view);
+            self.contentInsets = make.left.mas_equalTo(self.firstView.mas_right).with.insets(UIEdgeInsetsMake(0, self.insetsContentView, 0, 0));
+        }];
+        
+    }
+    else
+    {
+        [self.firstView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view);
+            make.bottom.mas_equalTo(self.view);
+            self.contentInsets = make.right.mas_equalTo(self.secondView.mas_left).with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
+            
+        }];
+        
+        [self.secondView mas_makeConstraints:^(MASConstraintMaker *make) {
+            self.lateralWidth = make.width.equalTo(@(self.lateralViewWidth));
+            make.right.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view);
+            make.bottom.mas_equalTo(self.view);
+        }];
+        
+    }
+}
 
 - (void)hideLateralViewAnimated:(BOOL)animated {
     self.lateralWidth.mas_equalTo(@(0));

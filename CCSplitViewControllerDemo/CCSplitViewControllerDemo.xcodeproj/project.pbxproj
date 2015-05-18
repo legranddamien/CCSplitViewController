@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		561B61941ADBB3BC00983100 /* CCContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 561B61931ADBB3BC00983100 /* CCContentViewController.m */; };
+		56383F971AEE2DE100E5FC5D /* CCDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56383F961AEE2DE100E5FC5D /* CCDetailsViewController.m */; };
 		56EEE40A1AD80D8600CFB555 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EEE4091AD80D8600CFB555 /* main.m */; };
 		56EEE40D1AD80D8600CFB555 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EEE40C1AD80D8600CFB555 /* AppDelegate.m */; };
 		56EEE4101AD80D8600CFB555 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EEE40F1AD80D8600CFB555 /* ViewController.m */; };
@@ -33,6 +34,8 @@
 		459B135C12ED9BDD8E31A8A4 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		561B61921ADBB3BC00983100 /* CCContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCContentViewController.h; sourceTree = "<group>"; };
 		561B61931ADBB3BC00983100 /* CCContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCContentViewController.m; sourceTree = "<group>"; };
+		56383F951AEE2DE100E5FC5D /* CCDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDetailsViewController.h; sourceTree = "<group>"; };
+		56383F961AEE2DE100E5FC5D /* CCDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDetailsViewController.m; sourceTree = "<group>"; };
 		56EEE4041AD80D8600CFB555 /* CCSplitViewControllerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CCSplitViewControllerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56EEE4081AD80D8600CFB555 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		56EEE4091AD80D8600CFB555 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -117,6 +120,8 @@
 				56EEE40F1AD80D8600CFB555 /* ViewController.m */,
 				56EEE42D1AD80E9300CFB555 /* CCSplitViewController.h */,
 				56EEE42E1AD80E9300CFB555 /* CCSplitViewController.m */,
+				56383F951AEE2DE100E5FC5D /* CCDetailsViewController.h */,
+				56383F961AEE2DE100E5FC5D /* CCDetailsViewController.m */,
 				561B61921ADBB3BC00983100 /* CCContentViewController.h */,
 				561B61931ADBB3BC00983100 /* CCContentViewController.m */,
 				56EEE4111AD80D8600CFB555 /* Main.storyboard */,
@@ -293,6 +298,7 @@
 				56EEE40A1AD80D8600CFB555 /* main.m in Sources */,
 				561B61941ADBB3BC00983100 /* CCContentViewController.m in Sources */,
 				56EEE42F1AD80E9300CFB555 /* CCSplitViewController.m in Sources */,
+				56383F971AEE2DE100E5FC5D /* CCDetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

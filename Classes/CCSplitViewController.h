@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface UIViewController (CCSplitViewController)
+@end
 
+@protocol CCSplitViewControllerDetails <NSObject>
 @end
 
 @interface CCSplitViewController : UIViewController
