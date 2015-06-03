@@ -187,9 +187,6 @@
 @property (nonatomic) UIView *firstView;
 @property (nonatomic) UIView *secondView;
 
-@property (nonatomic, weak) UIViewController *contentViewController;
-@property (nonatomic, weak) UIViewController *lateralViewController;
-
 @property (nonatomic, strong) MASConstraint *lateralWidth;
 @property (nonatomic, strong) MASConstraint *contentInsets;
 
@@ -318,9 +315,6 @@
 - (void)createView {
     if ([self.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
     {
-        self.contentViewController = self.viewControllers[1];
-        self.lateralViewController = self.viewControllers[0];
-        
         [self.firstView mas_makeConstraints:^(MASConstraintMaker *make) {
             self.lateralWidth = make.width.equalTo(@(self.lateralViewWidth));
             make.left.mas_equalTo(self.view);
@@ -337,9 +331,6 @@
     }
     else
     {
-        self.contentViewController = self.viewControllers[0];
-        self.lateralViewController = self.viewControllers[1];
-        
         [self.firstView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.view);
             make.top.mas_equalTo(self.view);
@@ -354,7 +345,6 @@
             make.top.mas_equalTo(self.view);
             make.bottom.mas_equalTo(self.view);
         }];
-        
     }
 }
 
@@ -387,11 +377,18 @@
     {
         self.lateralWidth.mas_equalTo(@(self.lateralViewWidth));
         self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
+        
+        if (self.lateralViewController && [self.lateralViewController respondsToSelector:@selector(didUpdateLateralViewInterafaceWithWidth:)])
+            [self.lateralViewController didUpdateLateralViewInterafaceWithWidth:self.lateralViewWidth];
+        
     }
     else
     {
         self.lateralWidth.mas_equalTo(@(self.lateralMinimumViewWidth));
         self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
+
+        if (self.lateralViewController && [self.lateralViewController respondsToSelector:@selector(didUpdateLateralViewInterafaceWithWidth:)])
+            [self.lateralViewController didUpdateLateralViewInterafaceWithWidth:self.lateralMinimumViewWidth];
     }
     
     if (animated)

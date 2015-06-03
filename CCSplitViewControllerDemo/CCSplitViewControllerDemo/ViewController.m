@@ -39,6 +39,8 @@
     vc2.view.backgroundColor = [UIColor colorWithRed:0.18 green:0.8 blue:0.44 alpha:1.0];
 
     splitViewController.viewControllers = [NSArray arrayWithObjects:vc1, vc2, nil];
+    splitViewController.lateralViewController = vc2;
+    splitViewController.lateralMinimumViewWidth = 100;
     
     [navigationController pushViewController:splitViewController animated:NO];
     

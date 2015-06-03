@@ -9,7 +9,7 @@
 #import <Masonry.h>
 #import "CCDetailsViewController.h"
 
-@interface CCDetailsViewController ()
+@interface CCDetailsViewController () 
 
 @property UIScrollView *scrollView;
 
@@ -68,10 +68,15 @@
     }
 }
 
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - CCSplitViewLateralProtocol
+
+- (void)didUpdateLateralViewInterafaceWithWidth:(CGFloat)width {
+    NSLog(@"Interafce Update with width : %f", width);
 }
 
 @end

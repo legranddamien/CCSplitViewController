@@ -43,6 +43,11 @@
 @property (nonatomic) CGFloat insetsContentView;
 
 /**
+ *  Prevent lateralView about interface update 
+ */
+@property (nonatomic, assign) id<CCSplitViewControllerLateral> lateralViewController;
+
+/**
  *  Set new width for lateral view and change interface
  *
  *  @param lateralViewWidth Width of lateralView

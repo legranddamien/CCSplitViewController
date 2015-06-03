@@ -9,6 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "CCSplitViewController.h"
 
-@interface CCDetailsViewController : UIViewController // <CCSplitViewControllerDetails>
-
+@interface CCDetailsViewController : UIViewController <CCSplitViewControllerLateral>
 @end
