@@ -35,7 +35,7 @@
     CCContentViewController *vc1 = [CCContentViewController new];
     vc1.view.backgroundColor = [UIColor colorWithRed:0.20 green:0.59 blue:0.85 alpha:1.0];
     
-    CCContentViewController *vc2 = [CCContentViewController new];
+    CCDetailsViewController *vc2 = [CCDetailsViewController new];
     vc2.view.backgroundColor = [UIColor colorWithRed:0.18 green:0.8 blue:0.44 alpha:1.0];
 
     splitViewController.viewControllers = [NSArray arrayWithObjects:vc1, vc2, nil];

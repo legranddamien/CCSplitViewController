@@ -53,10 +53,10 @@
     
     UIViewController *tmpViewController;
     CCSplitViewController *tmpSplitViewController = nil;
-
+    
     if ([self.parentViewController isKindOfClass:[CCSplitViewController class]])
         tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
-
+    
     if (tmpSplitViewController) {
         if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
             tmpViewController = tmpSplitViewController.viewControllers[1];
@@ -84,7 +84,7 @@
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
     }
-
+    
     
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
         tmpViewController == self)
@@ -107,7 +107,7 @@
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
     }
-
+    
     
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
         tmpViewController == self)
@@ -129,7 +129,7 @@
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
     }
-
+    
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
         tmpViewController == self)
         [self.parentViewController setHidesBottomBarWhenPushed:hidesBottomBarWhenPushed];
@@ -150,7 +150,7 @@
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
     }
-
+    
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
         tmpViewController == self)
         [self.parentViewController setToolbarItems:toolbarItems];
@@ -171,7 +171,7 @@
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
     }
-
+    
     if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
         tmpViewController == self)
         [self.parentViewController setToolbarItems:toolbarItems animated:animated];
@@ -187,6 +187,9 @@
 @property (nonatomic) UIView *firstView;
 @property (nonatomic) UIView *secondView;
 
+@property (nonatomic, weak) UIViewController *contentViewController;
+@property (nonatomic, weak) UIViewController *lateralViewController;
+
 @property (nonatomic, strong) MASConstraint *lateralWidth;
 @property (nonatomic, strong) MASConstraint *contentInsets;
 
@@ -201,6 +204,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        self.lateralMinimumViewWidth = 0;
         self.lateralViewWidth = 256;
         self.insetsContentView = 0;
     }
@@ -242,16 +246,33 @@
     [self createView];
     
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-    if (!UIDeviceOrientationIsLandscape(orientation))
-        [self hideLateralViewAnimated:NO];
+    
+    if (UIDeviceOrientationIsPortrait(orientation)) {
+        if (self.lateralMinimumViewWidth == 0)
+            [self hideLateralViewAnimated:NO];
+        else
+            [self updateLateralViewAnimated:NO];
+    }
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-    if (UIDeviceOrientationIsLandscape(orientation)) {
+    
+    if (UIDeviceOrientationIsLandscape(orientation) && self.lateralMinimumViewWidth == 0)
+    {
         [self showLateralViewAnimated:YES];
-    } else {
+    }
+    else if (UIDeviceOrientationIsLandscape(orientation) && self.lateralMinimumViewWidth != 0)
+    {
+        [self updateLateralViewAnimated:YES];
+    }
+    else if (UIDeviceOrientationIsPortrait(orientation) && self.lateralMinimumViewWidth == 0)
+    {
         [self hideLateralViewAnimated:YES];
+    }
+    else if (UIDeviceOrientationIsPortrait(orientation) && self.lateralMinimumViewWidth != 0)
+    {
+        [self updateLateralViewAnimated:YES];
     }
 }
 
@@ -297,6 +318,9 @@
 - (void)createView {
     if ([self.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
     {
+        self.contentViewController = self.viewControllers[1];
+        self.lateralViewController = self.viewControllers[0];
+        
         [self.firstView mas_makeConstraints:^(MASConstraintMaker *make) {
             self.lateralWidth = make.width.equalTo(@(self.lateralViewWidth));
             make.left.mas_equalTo(self.view);
@@ -310,10 +334,12 @@
             make.bottom.mas_equalTo(self.view);
             self.contentInsets = make.left.mas_equalTo(self.firstView.mas_right).with.insets(UIEdgeInsetsMake(0, self.insetsContentView, 0, 0));
         }];
-        
     }
     else
     {
+        self.contentViewController = self.viewControllers[0];
+        self.lateralViewController = self.viewControllers[1];
+        
         [self.firstView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.view);
             make.top.mas_equalTo(self.view);
@@ -346,6 +372,28 @@
 - (void)showLateralViewAnimated:(BOOL)animated {
     self.lateralWidth.mas_equalTo(@(self.lateralViewWidth));
     self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
+    if (animated)
+        [UIView animateWithDuration:0.35 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    else
+        [self.view layoutIfNeeded];
+}
+
+- (void)updateLateralViewAnimated:(BOOL)animated {
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    
+    if (UIDeviceOrientationIsLandscape(orientation))
+    {
+        self.lateralWidth.mas_equalTo(@(self.lateralViewWidth));
+        self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
+    }
+    else
+    {
+        self.lateralWidth.mas_equalTo(@(self.lateralMinimumViewWidth));
+        self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
+    }
+    
     if (animated)
         [UIView animateWithDuration:0.35 animations:^{
             [self.view layoutIfNeeded];

@@ -14,15 +14,40 @@
 @protocol CCSplitViewControllerDetails <NSObject>
 @end
 
+@protocol CCSplitViewControllerLateral <NSObject>
+
+- (void)didUpdateLateralViewInterafaceWithWidth:(CGFloat)width;
+
+@end
+
 @interface CCSplitViewController : UIViewController
 
+/**
+ *  Specifies the view controller to show
+ */
 @property (nonatomic, copy) NSArray *viewControllers;
 
+/**
+ *  Specifies the width of lateralView in landscape mode, by default 256
+ */
 @property (nonatomic, assign) CGFloat lateralViewWidth;
 
-// Specifies the insets between contentView and lateralView
+/**
+ *  Specifies the minimal width of lateralView in portrait mode, by default 0
+ */
+@property (nonatomic, assign) CGFloat lateralMinimumViewWidth;
+
+/**
+ *  Specifies the insets between contentView and lateralView
+ */
 @property (nonatomic) CGFloat insetsContentView;
 
+/**
+ *  Set new width for lateral view and change interface
+ *
+ *  @param lateralViewWidth Width of lateralView
+ *  @param animated         Animation
+ */
 - (void)setLateralViewWidth:(CGFloat)lateralViewWidth animated:(BOOL)animated;
 
 @end
