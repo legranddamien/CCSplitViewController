@@ -241,36 +241,64 @@
     }
     
     [self createView];
+
     
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
-    if (UIDeviceOrientationIsPortrait(orientation)) {
+    if (self.view.frame.size.width > self.view.frame.size.height)
+    {
+        [self showLateralViewAnimated:NO];
+    }
+    else
+    {
         if (self.lateralMinimumViewWidth == 0)
             [self hideLateralViewAnimated:NO];
         else
-            [self updateLateralViewAnimated:NO];
+            [self updateLateralViewForPortrait:NO];
     }
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
-    if (UIDeviceOrientationIsLandscape(orientation) && self.lateralMinimumViewWidth == 0)
-    {
-        [self showLateralViewAnimated:YES];
-    }
-    else if (UIDeviceOrientationIsLandscape(orientation) && self.lateralMinimumViewWidth != 0)
-    {
-        [self updateLateralViewAnimated:YES];
-    }
-    else if (UIDeviceOrientationIsPortrait(orientation) && self.lateralMinimumViewWidth == 0)
-    {
+    if(floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) return;
+    
+    BOOL portrait;
+    
+    if (self.view.frame.size.width > self.view.frame.size.height)
+        portrait = false;
+    else
+        portrait = true;
+    
+
+    if (portrait && self.lateralMinimumViewWidth == 0) {
         [self hideLateralViewAnimated:YES];
+    } else if (portrait && self.lateralMinimumViewWidth != 0) {
+        [self updateLateralViewForPortrait:YES];
+    } else if (!portrait && self.lateralMinimumViewWidth == 0) {
+        [self showLateralViewAnimated:YES];
+    } else if (!portrait && self.lateralMinimumViewWidth != 0) {
+        [self updateLateralViewForLandscape:YES];
     }
-    else if (UIDeviceOrientationIsPortrait(orientation) && self.lateralMinimumViewWidth != 0)
-    {
-        [self updateLateralViewAnimated:YES];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    BOOL portrait;
+    
+    if (size.width > size.height)
+        portrait = false;
+    else
+        portrait = true;
+    
+    
+    if (portrait && self.lateralMinimumViewWidth == 0) {
+        [self hideLateralViewAnimated:YES];
+    } else if (portrait && self.lateralMinimumViewWidth != 0) {
+        [self updateLateralViewForPortrait:YES];
+    } else if (!portrait && self.lateralMinimumViewWidth == 0) {
+        [self showLateralViewAnimated:YES];
+    } else if (!portrait && self.lateralMinimumViewWidth != 0) {
+        [self updateLateralViewForLandscape:YES];
     }
+
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -370,33 +398,36 @@
         [self.view layoutIfNeeded];
 }
 
-- (void)updateLateralViewAnimated:(BOOL)animated {
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+- (void)updateLateralViewForPortrait:(BOOL)animated {
+    self.lateralWidth.mas_equalTo(@(self.lateralMinimumViewWidth));
+    self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
     
-    if (UIDeviceOrientationIsLandscape(orientation))
-    {
-        self.lateralWidth.mas_equalTo(@(self.lateralViewWidth));
-        self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
-        
-        if (self.lateralViewController && [self.lateralViewController respondsToSelector:@selector(didUpdateLateralViewInterafaceWithWidth:)])
-            [self.lateralViewController didUpdateLateralViewInterafaceWithWidth:self.lateralViewWidth];
-        
-    }
-    else
-    {
-        self.lateralWidth.mas_equalTo(@(self.lateralMinimumViewWidth));
-        self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
+    if (self.lateralViewController && [self.lateralViewController respondsToSelector:@selector(didUpdateLateralViewInterafaceWithWidth:compact:)])
+        [self.lateralViewController didUpdateLateralViewInterafaceWithWidth:self.lateralMinimumViewWidth compact:YES];
 
-        if (self.lateralViewController && [self.lateralViewController respondsToSelector:@selector(didUpdateLateralViewInterafaceWithWidth:)])
-            [self.lateralViewController didUpdateLateralViewInterafaceWithWidth:self.lateralMinimumViewWidth];
-    }
-    
     if (animated)
         [UIView animateWithDuration:0.35 animations:^{
             [self.view layoutIfNeeded];
         }];
     else
         [self.view layoutIfNeeded];
+
+}
+
+- (void)updateLateralViewForLandscape:(BOOL)animated {
+    self.lateralWidth.mas_equalTo(@(self.lateralViewWidth));
+    self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
+    
+    if (self.lateralViewController && [self.lateralViewController respondsToSelector:@selector(didUpdateLateralViewInterafaceWithWidth:compact:)])
+        [self.lateralViewController didUpdateLateralViewInterafaceWithWidth:self.lateralViewWidth compact:NO];
+
+    if (animated)
+        [UIView animateWithDuration:0.35 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    else
+        [self.view layoutIfNeeded];
+
 }
 
 @end

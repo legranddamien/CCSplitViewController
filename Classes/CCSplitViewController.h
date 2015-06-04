@@ -16,7 +16,7 @@
 
 @protocol CCSplitViewControllerLateral <NSObject>
 
-- (void)didUpdateLateralViewInterafaceWithWidth:(CGFloat)width;
+- (void)didUpdateLateralViewInterafaceWithWidth:(CGFloat)width compact:(BOOL)compact;
 
 @end
 

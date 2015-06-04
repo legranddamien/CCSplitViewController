@@ -75,7 +75,7 @@
 
 #pragma mark - CCSplitViewLateralProtocol
 
-- (void)didUpdateLateralViewInterafaceWithWidth:(CGFloat)width {
+- (void)didUpdateLateralViewInterafaceWithWidth:(CGFloat)width compact:(BOOL)compact {
     NSLog(@"Interafce Update with width : %f", width);
 }
 
