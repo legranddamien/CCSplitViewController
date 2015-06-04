@@ -207,6 +207,17 @@
     return self;
 }
 
+- (instancetype)initWithViewControllers:(NSArray *)viewControllers {
+    self = [super init];
+    if (self) {
+        self.lateralMinimumViewWidth = 0;
+        self.lateralViewWidth = 256;
+        self.insetsContentView = 0;
+        self.viewControllers = viewControllers;
+    }
+    return self;
+}
+
 - (void)setViewControllers:(NSArray *)viewControllers
 {
     _viewControllers = viewControllers;

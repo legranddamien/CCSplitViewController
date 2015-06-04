@@ -55,6 +55,22 @@
 @property (nonatomic, assign) id<CCSplitViewControllerLateral> lateralViewController;
 
 /**
+ *  Initialize CCSplitViewController
+ *
+ *  @return A CCSplitViewController object
+ */
+- (instancetype)init;
+
+/**
+ *  Initialize CCSplitViewController with view controller array
+ *
+ *  @param viewControllers An array of view controller
+ *
+ *  @return A CCSplitViewController object
+ */
+- (instancetype)initWithViewControllers:(NSArray *)viewControllers;
+
+/**
  *  Set new width for lateral view and change interface
  *
  *  @param lateralViewWidth Width of lateralView
