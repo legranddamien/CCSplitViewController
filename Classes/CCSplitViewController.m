@@ -58,7 +58,7 @@
         tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
     
     if (tmpSplitViewController) {
-        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerLateral)])
             tmpViewController = tmpSplitViewController.viewControllers[1];
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
@@ -79,7 +79,7 @@
         tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
     
     if (tmpSplitViewController) {
-        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerLateral)])
             tmpViewController = tmpSplitViewController.viewControllers[1];
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
@@ -102,7 +102,7 @@
         tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
     
     if (tmpSplitViewController) {
-        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerLateral)])
             tmpViewController = tmpSplitViewController.viewControllers[1];
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
@@ -124,7 +124,7 @@
         tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
     
     if (tmpSplitViewController) {
-        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerLateral)])
             tmpViewController = tmpSplitViewController.viewControllers[1];
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
@@ -145,7 +145,7 @@
         tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
     
     if (tmpSplitViewController) {
-        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerLateral)])
             tmpViewController = tmpSplitViewController.viewControllers[1];
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
@@ -166,7 +166,7 @@
         tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
     
     if (tmpSplitViewController) {
-        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerLateral)])
             tmpViewController = tmpSplitViewController.viewControllers[1];
         else
             tmpViewController = tmpSplitViewController.viewControllers[0];
@@ -180,7 +180,6 @@
 }
 
 @end
-
 
 @interface CCSplitViewController ()
 
@@ -211,23 +210,25 @@
 - (void)setViewControllers:(NSArray *)viewControllers
 {
     _viewControllers = viewControllers;
-    for (UIViewController *vc in _viewControllers)
-    {
-        [self addChildViewController:vc];
-    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+        
     self.firstView = [UIView new];
     self.secondView = [UIView new];
+  
+    for (UIViewController *vc in _viewControllers)
+    {
+        [self addChildViewController:vc];
+    }
     
     [self.view addSubview:self.firstView];
     [self.view addSubview:self.secondView];
     
     if ([self.viewControllers count] > 0) {
         [self.firstView addSubview:[self.viewControllers[0] view]];
+        [self.viewControllers[0] didMoveToParentViewController:self];
         [self.firstView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.firstView);
         }];
@@ -235,14 +236,13 @@
     
     if ([self.viewControllers count] > 1) {
         [self.secondView addSubview:[self.viewControllers[1] view]];
+        [self.viewControllers[1] didMoveToParentViewController:self];
         [self.secondView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.secondView);
         }];
     }
     
     [self createView];
-
-    
     
     if (self.view.frame.size.width > self.view.frame.size.height)
     {
@@ -253,13 +253,14 @@
         if (self.lateralMinimumViewWidth == 0)
             [self hideLateralViewAnimated:NO];
         else
-            [self updateLateralViewForPortrait:NO];
+            [self updateLateralViewForPortrait];
     }
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
     if(floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) return;
+    
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     
     BOOL portrait;
     
@@ -272,15 +273,16 @@
     if (portrait && self.lateralMinimumViewWidth == 0) {
         [self hideLateralViewAnimated:YES];
     } else if (portrait && self.lateralMinimumViewWidth != 0) {
-        [self updateLateralViewForPortrait:YES];
+        [self updateLateralViewForPortrait];
     } else if (!portrait && self.lateralMinimumViewWidth == 0) {
         [self showLateralViewAnimated:YES];
     } else if (!portrait && self.lateralMinimumViewWidth != 0) {
-        [self updateLateralViewForLandscape:YES];
+        [self updateLateralViewForLandscape];
     }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     BOOL portrait;
     
     if (size.width > size.height)
@@ -292,13 +294,12 @@
     if (portrait && self.lateralMinimumViewWidth == 0) {
         [self hideLateralViewAnimated:YES];
     } else if (portrait && self.lateralMinimumViewWidth != 0) {
-        [self updateLateralViewForPortrait:YES];
+        [self updateLateralViewForPortrait];
     } else if (!portrait && self.lateralMinimumViewWidth == 0) {
         [self showLateralViewAnimated:YES];
     } else if (!portrait && self.lateralMinimumViewWidth != 0) {
-        [self updateLateralViewForLandscape:YES];
+        [self updateLateralViewForLandscape];
     }
-
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -341,7 +342,7 @@
 #pragma mark - private
 
 - (void)createView {
-    if ([self.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerDetails)])
+    if ([self.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerLateral)])
     {
         [self.firstView mas_makeConstraints:^(MASConstraintMaker *make) {
             self.lateralWidth = make.width.equalTo(@(self.lateralViewWidth));
@@ -398,36 +399,20 @@
         [self.view layoutIfNeeded];
 }
 
-- (void)updateLateralViewForPortrait:(BOOL)animated {
+- (void)updateLateralViewForPortrait {
     self.lateralWidth.mas_equalTo(@(self.lateralMinimumViewWidth));
     self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
     
     if (self.lateralViewController && [self.lateralViewController respondsToSelector:@selector(didUpdateLateralViewInterafaceWithWidth:compact:)])
         [self.lateralViewController didUpdateLateralViewInterafaceWithWidth:self.lateralMinimumViewWidth compact:YES];
-
-    if (animated)
-        [UIView animateWithDuration:0.35 animations:^{
-            [self.view layoutIfNeeded];
-        }];
-    else
-        [self.view layoutIfNeeded];
-
 }
 
-- (void)updateLateralViewForLandscape:(BOOL)animated {
+- (void)updateLateralViewForLandscape {
     self.lateralWidth.mas_equalTo(@(self.lateralViewWidth));
     self.contentInsets.with.insets(UIEdgeInsetsMake(0, 0, 0, self.insetsContentView));
     
     if (self.lateralViewController && [self.lateralViewController respondsToSelector:@selector(didUpdateLateralViewInterafaceWithWidth:compact:)])
         [self.lateralViewController didUpdateLateralViewInterafaceWithWidth:self.lateralViewWidth compact:NO];
-
-    if (animated)
-        [UIView animateWithDuration:0.35 animations:^{
-            [self.view layoutIfNeeded];
-        }];
-    else
-        [self.view layoutIfNeeded];
-
 }
 
 @end

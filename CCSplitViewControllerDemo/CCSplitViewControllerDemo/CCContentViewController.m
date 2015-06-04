@@ -21,11 +21,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+        
     self.scrollView = [UIScrollView new];
     self.scrollViewContent = [UIView new];
-    
+    self.view.backgroundColor = [UIColor colorWithRed:0.20 green:0.59 blue:0.85 alpha:1.0];
+
     self.scrollView.showsVerticalScrollIndicator = NO;
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
+
     
     [self.view addSubview:self.scrollView];
     [self.scrollView addSubview:self.scrollViewContent];
@@ -38,6 +42,8 @@
         make.width.mas_equalTo(self.scrollView);
         make.edges.mas_equalTo(self.scrollView);
     }];
+    
+    [self.navigationItem setTitle:@"ContentView"];
     
     UITextView *lastTextView = nil;
     
