@@ -45,6 +45,11 @@
 @property (nonatomic, assign) CGFloat lateralViewWidth;
 
 /**
+ *  Color of the separation line between lateral and detail view. clearColor to make it invisible by default
+ */
+@property (nonatomic, strong) UIColor *separatorColor;
+
+/**
  *  Specifies the minimal width of lateral view in portrait mode, by default 0
  */
 @property (nonatomic, assign) CGFloat lateralMinimumViewWidth;
@@ -55,9 +60,9 @@
 @property (nonatomic) CGFloat insetsContentView;
 
 /**
- *  Specifies the CCSplitViewControllerLateral
+ *  Tel if the lateral view is hidden or compact.
  */
-@property (nonatomic, assign) id<CCSplitViewControllerLateral> lateralViewController;
+@property (nonatomic, readonly) BOOL isCompact;
 
 /**
  *  Initialize CCSplitViewController
