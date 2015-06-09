@@ -257,7 +257,7 @@
     [self.view addSubview:self.secondView];
     
     if ([self.viewControllers count] > 0) {
-        [(UIViewController *)self.viewControllers[0] addChildViewController:self];
+        [self addChildViewController:self.viewControllers[0]];
         [self.firstView addSubview:[self.viewControllers[0] view]];
         [self.viewControllers[0] didMoveToParentViewController:self];
         [self.firstView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
