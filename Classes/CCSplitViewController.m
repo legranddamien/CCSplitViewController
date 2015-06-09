@@ -12,7 +12,7 @@
 
 @implementation UIViewController (CCSplitViewController)
 
-- (UISplitViewController *)ccSplitViewController
+- (CCSplitViewController *)ccSplitViewController
 {
     UIViewController *ctrl = self.parentViewController;
     while (![ctrl isKindOfClass:[CCSplitViewController class]] && ctrl.parentViewController != nil)
@@ -20,7 +20,7 @@
         ctrl = self.parentViewController;
     }
     
-    return ([ctrl isKindOfClass:[CCSplitViewController class]]) ? ctrl : nil;
+    return ([ctrl isKindOfClass:[CCSplitViewController class]]) ? (CCSplitViewController *)ctrl : nil;
 }
 
 + (void)load {
