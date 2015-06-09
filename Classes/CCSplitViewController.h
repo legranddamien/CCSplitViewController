@@ -8,7 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class CCSplitViewController;
+
 @interface UIViewController (CCSplitViewController)
+
+@property (nonatomic, readonly) CCSplitViewController *ccSplitViewController;
+
 @end
 
 /**
@@ -77,5 +82,13 @@
  *  @param animated         The animation value
  */
 - (void)setLateralViewWidth:(CGFloat)lateralViewWidth animated:(BOOL)animated;
+
+/**
+ *  Change the detail content
+ *
+ *  @param vc     the new view controller
+ *  @param sender the sender (is not used yet)
+ */
+- (void)showDetailViewController:(UIViewController *)vc sender:(id)sender;
 
 @end

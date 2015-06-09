@@ -12,6 +12,17 @@
 
 @implementation UIViewController (CCSplitViewController)
 
+- (UISplitViewController *)ccSplitViewController
+{
+    UIViewController *ctrl = self.parentViewController;
+    while (![ctrl isKindOfClass:[CCSplitViewController class]] && ctrl.parentViewController != nil)
+    {
+        ctrl = self.parentViewController;
+    }
+    
+    return ([ctrl isKindOfClass:[CCSplitViewController class]]) ? ctrl : nil;
+}
+
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -198,7 +209,7 @@
 #pragma mark - Lifecycle
 
 - (instancetype)init {
-    self = [super init];
+    self = [super initWithNibName:nil bundle:nil];
     if (self) {
         self.lateralMinimumViewWidth = 0;
         self.lateralViewWidth = 256;
@@ -207,8 +218,21 @@
     return self;
 }
 
-- (instancetype)initWithViewControllers:(NSArray *)viewControllers {
-    self = [super init];
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if(self)
+    {
+        self.lateralMinimumViewWidth = 0;
+        self.lateralViewWidth = 256;
+        self.insetsContentView = 0;
+    }
+    return self;
+}
+
+- (instancetype)initWithViewControllers:(NSArray *)viewControllers
+{
+    self = [super initWithNibName:nil bundle:nil];
     if (self) {
         self.lateralMinimumViewWidth = 0;
         self.lateralViewWidth = 256;
@@ -228,16 +252,12 @@
         
     self.firstView = [UIView new];
     self.secondView = [UIView new];
-  
-    for (UIViewController *vc in _viewControllers)
-    {
-        [self addChildViewController:vc];
-    }
     
     [self.view addSubview:self.firstView];
     [self.view addSubview:self.secondView];
     
     if ([self.viewControllers count] > 0) {
+        [(UIViewController *)self.viewControllers[0] addChildViewController:self];
         [self.firstView addSubview:[self.viewControllers[0] view]];
         [self.viewControllers[0] didMoveToParentViewController:self];
         [self.firstView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -246,11 +266,7 @@
     }
     
     if ([self.viewControllers count] > 1) {
-        [self.secondView addSubview:[self.viewControllers[1] view]];
-        [self.viewControllers[1] didMoveToParentViewController:self];
-        [self.secondView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.secondView);
-        }];
+        [self showDetailViewController:self.viewControllers[1] sender:self];
     }
     
     [self createView];
@@ -348,6 +364,33 @@
     } else {
         [self.view layoutIfNeeded];
     }
+}
+
+- (void)showDetailViewController:(UIViewController *)vc sender:(id)sender
+{
+    if(self.secondView.subviews.count > 0)
+    {
+        [(UIViewController *)self.viewControllers[1] removeFromParentViewController];
+        [self.secondView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    }
+    
+    if(self.viewControllers.count <= 1 || self.viewControllers[1] != vc)
+    {
+        NSArray *array = @[self.viewControllers[0], vc];
+        self.viewControllers = array;
+    }
+    
+    [self addChildViewController:self.viewControllers[1]];
+    
+    UIView *view = [self.viewControllers[1] view];
+
+    [self.secondView addSubview:view];
+    [self.viewControllers[1] didMoveToParentViewController:self];
+    [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.secondView);
+    }];
+    
+    [self.view layoutIfNeeded];
 }
 
 #pragma mark - private
