@@ -292,16 +292,19 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
     if(floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) return;
     
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     
-    BOOL portrait;
+    BOOL portrait = UIInterfaceOrientationIsPortrait(toInterfaceOrientation);
     
-    if (self.view.frame.size.width > self.view.frame.size.height)
-        portrait = false;
-    else
-        portrait = true;
+//    if (self.view.frame.size.width > self.view.frame.size.height) //size did not changed yet ! and it better to use UIInterfaceOrientation returned by the method
+//        portrait = NO;
+//    else
+//        portrait = YES;
+    
+    
     
 
     if (portrait && self.lateralMinimumViewWidth == 0) {
@@ -320,9 +323,9 @@
     BOOL portrait;
     
     if (size.width > size.height)
-        portrait = false;
+        portrait = NO;
     else
-        portrait = true;
+        portrait = YES;
     
     
     if (portrait && self.lateralMinimumViewWidth == 0) {
