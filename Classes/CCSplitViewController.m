@@ -278,7 +278,18 @@
     
     [self createView];
     
-    if (self.view.frame.size.width > self.view.frame.size.height)
+    BOOL portrait = NO;
+    
+    if(floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1)
+    {
+        portrait = (self.view.frame.size.height > self.view.frame.size.width);
+    }
+    else
+    {
+        portrait = UIInterfaceOrientationIsPortrait(self.interfaceOrientation);
+    }
+    
+    if (!portrait)
     {
         [self showLateralViewAnimated:NO];
     }
