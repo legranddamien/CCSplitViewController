@@ -248,7 +248,38 @@
 
 - (void)setViewControllers:(NSArray *)viewControllers
 {
+    [self removeCurrentControllersFromViews];
     _viewControllers = viewControllers;
+    [self addControllersToViews];
+}
+
+- (void)addControllersToViews
+{
+    if(!self.firstView) return;
+    
+    if ([self.viewControllers count] > 0) {
+        [self addChildViewController:self.viewControllers[0]];
+        [self.firstView addSubview:[self.viewControllers[0] view]];
+        [self.viewControllers[0] didMoveToParentViewController:self];
+        [self.firstView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.firstView);
+        }];
+    }
+    
+    if ([self.viewControllers count] > 1) {
+        [self showDetailViewController:self.viewControllers[1] sender:self];
+    }
+}
+
+- (void)removeCurrentControllersFromViews
+{
+    if(!self.firstView) return;
+    
+    for (UIViewController *ctrl in self.viewControllers)
+    {
+        [ctrl.view removeFromSuperview];
+        [ctrl removeFromParentViewController];
+    }
 }
 
 - (void)viewDidLoad {
@@ -263,18 +294,7 @@
     [self.view addSubview:self.separatorView];
     [self.view addSubview:self.secondView];
     
-    if ([self.viewControllers count] > 0) {
-        [self addChildViewController:self.viewControllers[0]];
-        [self.firstView addSubview:[self.viewControllers[0] view]];
-        [self.viewControllers[0] didMoveToParentViewController:self];
-        [self.firstView.subviews[0] mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.firstView);
-        }];
-    }
-    
-    if ([self.viewControllers count] > 1) {
-        [self showDetailViewController:self.viewControllers[1] sender:self];
-    }
+    [self addControllersToViews];
     
     [self createView];
     
@@ -315,9 +335,6 @@
 //    else
 //        portrait = YES;
     
-    
-    
-
     if (portrait && self.lateralMinimumViewWidth == 0) {
         [self hideLateralViewAnimated:YES];
     } else if (portrait && self.lateralMinimumViewWidth != 0) {
@@ -350,7 +367,7 @@
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return [self.viewControllers[0] supportedInterfaceOrientations];
 }
 

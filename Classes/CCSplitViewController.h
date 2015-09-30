@@ -60,7 +60,7 @@
 @property (nonatomic) CGFloat insetsContentView;
 
 /**
- *  Tel if the lateral view is hidden or compact.
+ *  Tell if the lateral view is hidden or compact.
  */
 @property (nonatomic, readonly) BOOL isCompact;
 
