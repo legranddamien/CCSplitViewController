@@ -86,22 +86,14 @@
     UIViewController *tmpViewController;
     CCSplitViewController *tmpSplitViewController = nil;
     
-    if ([self.parentViewController isKindOfClass:[CCSplitViewController class]])
-        tmpSplitViewController = ((CCSplitViewController *)self.parentViewController);
-    
-    if (tmpSplitViewController) {
-        if ([tmpSplitViewController.viewControllers[0] conformsToProtocol:@protocol(CCSplitViewControllerLateral)])
-            tmpViewController = tmpSplitViewController.viewControllers[1];
-        else
-            tmpViewController = tmpSplitViewController.viewControllers[0];
-    }
-    
-    
-    if (self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]] &&
-        tmpViewController == self)
+    if(self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]])
+    {
         return [self.parentViewController navigationItem];
+    }
     else
+    {
         return [self cc_navigationItem];
+    }
 }
 
 - (void)cc_setTitle:(NSString *)title {
@@ -284,7 +276,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-        
+    
     self.firstView = [UIView new];
     self.separatorView = [UIView new];
     self.separatorView.backgroundColor = self.separatorColor;
@@ -330,10 +322,10 @@
     
     BOOL portrait = UIInterfaceOrientationIsPortrait(toInterfaceOrientation);
     
-//    if (self.view.frame.size.width > self.view.frame.size.height) //size did not changed yet ! and it better to use UIInterfaceOrientation returned by the method
-//        portrait = NO;
-//    else
-//        portrait = YES;
+    //    if (self.view.frame.size.width > self.view.frame.size.height) //size did not changed yet ! and it better to use UIInterfaceOrientation returned by the method
+    //        portrait = NO;
+    //    else
+    //        portrait = YES;
     
     if (portrait && self.lateralMinimumViewWidth == 0) {
         [self hideLateralViewAnimated:YES];
@@ -421,9 +413,11 @@
     [self addChildViewController:self.viewControllers[1]];
     
     self.navigationItem.titleView = nil;
+    self.navigationItem.leftBarButtonItem = nil;
+    self.navigationItem.rightBarButtonItem = nil;
     
     UIView *view = [self.viewControllers[1] view];
-
+    
     [self.secondView addSubview:view];
     [self.viewControllers[1] didMoveToParentViewController:self];
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
