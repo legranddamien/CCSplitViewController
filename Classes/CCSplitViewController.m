@@ -17,7 +17,7 @@
     UIViewController *ctrl = self.parentViewController;
     while (![ctrl isKindOfClass:[CCSplitViewController class]] && ctrl != nil)
     {
-        ctrl = self.parentViewController;
+        ctrl = ctrl.parentViewController;
     }
     
     return ctrl;
