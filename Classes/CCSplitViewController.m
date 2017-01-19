@@ -15,12 +15,12 @@
 - (CCSplitViewController *)ccSplitViewController
 {
     UIViewController *ctrl = self.parentViewController;
-    while (![ctrl isKindOfClass:[CCSplitViewController class]] && ctrl.parentViewController != nil)
+    while (![ctrl isKindOfClass:[CCSplitViewController class]] && ctrl != nil)
     {
         ctrl = self.parentViewController;
     }
     
-    return ([ctrl isKindOfClass:[CCSplitViewController class]]) ? (CCSplitViewController *)ctrl : nil;
+    return ctrl;
 }
 
 + (void)load {
