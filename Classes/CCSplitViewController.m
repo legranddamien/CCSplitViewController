@@ -20,7 +20,7 @@
         ctrl = ctrl.parentViewController;
     }
     
-    return ctrl;
+    return (CCSplitViewController *)ctrl;
 }
 
 + (void)load {
@@ -82,10 +82,8 @@
         return [self cc_navigationController];
 }
 
-- (UINavigationItem *)cc_navigationItem {
-    UIViewController *tmpViewController;
-    CCSplitViewController *tmpSplitViewController = nil;
-    
+- (UINavigationItem *)cc_navigationItem 
+{    
     if(self.parentViewController && [self.parentViewController isKindOfClass:[CCSplitViewController class]])
     {
         return [self.parentViewController navigationItem];
