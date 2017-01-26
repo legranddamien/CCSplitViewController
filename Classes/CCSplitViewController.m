@@ -361,6 +361,21 @@
     return [self.viewControllers[0] supportedInterfaceOrientations];
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return [self.viewControllers[0] prefersStatusBarHidden];
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return [self.self.viewControllers[0] preferredStatusBarUpdateAnimation];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return [self.viewControllers[0] preferredStatusBarStyle];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
