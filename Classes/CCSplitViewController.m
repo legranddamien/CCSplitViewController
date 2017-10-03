@@ -288,7 +288,7 @@
     
     [self createView];
     
-    BOOL portrait = UIInterfaceOrientationIsPortrait(self.interfaceOrientation);
+    BOOL portrait = (self.view.frame.size.height > self.view.frame.size.width);
     
     if (!portrait)
     {
